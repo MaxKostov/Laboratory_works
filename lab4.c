@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 void add_text(char **buff);
-int search_word(char **buff, char **searc);
+int search_word(char **buff);
 void edit_text(char **buff);
 int search_id(char **buff, char **searc);
 
@@ -77,12 +77,8 @@ int main(void)
         }
         else if (n == 2)
         {
-            char *searc;
-            searc = malloc(sizeof(char) * 100);
-            printf("Write the word: \n");
-            fgets(searc, 100, stdin);
-
-            printf("This word appears %i times in the text\n", search_word(&buff, &searc));
+            printf("This word appears %i times in the text\n", search_word(&buff));
+            fgetc(stdin);
         }
         else if (n == 3)
         {
@@ -146,41 +142,49 @@ void add_text(char **buff)
     free(temp);
 }
 // search_word function
-int search_word(char **buff, char **searc)
+int search_word(char **buff)
 {
     int amm = 0;
     int num = 0;
+    char *searc;
+    searc = malloc(sizeof(char) * 100);
+    printf("Write the word: \n");
+    fgets(searc, 100, stdin);
     
     char *temp;
-    int sl = strlen(*searc);
-    (*searc)[sl-1] = '\0';
+    int sl = strlen(searc);
+    (searc)[sl-1] = '\0';
     temp = malloc(sizeof(char) * sl);
     memset(temp, '\0', sl);
 
-    if ((*searc)[sl-2] == ' ')
+    if ((searc)[sl-2] == ' ')
     {
         for (int i = 0, n = strlen(*buff); i < n; i++)
         {
             char c = (*buff)[i];
-            temp[num] = c;
+            if (num == 0 && c == ' ') 
+            {
+                continue;
+            }
+            else
+            {
+                temp[num] = c;
+            }
             if (c == ' ')
             {
-                if (strcmp(*searc, temp) == 0)
+                if (strcmp(searc, temp) == 0)
                 {
                     amm++;
-                    num = 0;
+                    num = -1;
                     memset(temp, '\0', sl);
                 }
                 else
                 {
-                    num = 0;
+                    num = -1;
                     memset(temp, '\0', sl);
                 }
             }
-            else
-            {
-                num++;
-            }
+            num++;
         }
     }
     else
@@ -188,25 +192,32 @@ int search_word(char **buff, char **searc)
         for (int i = 0, n = strlen(*buff); i < n; i++)
         {
             char c = (*buff)[i];
-            temp[num] = c;
-            if ((*buff)[i+1] == '\0')
+            if (num == 0 && c == ' ') 
             {
-                if (strcmp(*searc, temp) == 0)
+                continue;
+            }
+            else
+            {
+                temp[num] = c;
+            }
+            if ((*buff)[i+1] == '\0' ||(*buff)[i+1] == ' ' || ispunct((*buff)[i+1]))
+            {
+                if (strcmp(searc, temp) == 0 && ((*buff)[i+1] == ' ' || (*buff)[i+1] == '\0' || ispunct((*buff)[i+1])))
                 {
                     amm++;
-                    num = 0;
+                    num = -1;
                     memset(temp, '\0', sl);
                 }
                 else
                 {
-                    num = 0;
+                    num = -1;
                     memset(temp, '\0', sl);
                 }
             }
-        
+            num++;
         }  
     }
-    free(*searc);
+    free(searc);
     return amm;
 }
 
@@ -225,7 +236,7 @@ void edit_text(char **buff)
     memset(fw, '\0', 200);
     int id = search_id(&(*buff), &temp);
     int si = id + strlen(temp);
-    if (id == 0)
+    if (id == -1)
     {
         printf("There is no such word :(\n");
     }
@@ -254,7 +265,7 @@ int search_id(char **buff, char **searc)
 {
     int amm = 0;
     int num = 0;
-    int id = 0;
+    int id = -1;
     
     char *temp;
     int sl = strlen(*searc);
@@ -267,29 +278,33 @@ int search_id(char **buff, char **searc)
         for (int i = 0, n = strlen(*buff); i < n; i++)
         {
             char c = (*buff)[i];
-            temp[num] = c;
+            if (num == 0 && c == ' ') 
+            {
+                continue;
+            }
+            else
+            {
+                temp[num] = c;
+            }
             if (c == ' ')
             {
                 if (strcmp(*searc, temp) == 0)
                 {
                     amm++;
+                    memset(temp, '\0', sl);
                     if (amm == 1)
                     {
                         id = i - num;
                     }
-                    num = 0;
-                    memset(temp, '\0', sl);
+                    num = -1;
                 }
                 else
                 {
-                    num = 0;
+                    num = -1;
                     memset(temp, '\0', sl);
                 }
             }
-            else
-            {
-                num++;
-            }
+            num++;
         }
     }
     else
@@ -297,28 +312,34 @@ int search_id(char **buff, char **searc)
         for (int i = 0, n = strlen(*buff); i < n; i++)
         {
             char c = (*buff)[i];
-            temp[num] = c;
-            if ((*buff)[i+1] == '\0')
+            if (num == 0 && c == ' ') 
             {
-                if (strcmp(*searc, temp) == 0)
+                continue;
+            }
+            else
+            {
+                temp[num] = c;
+            }
+            if ((*buff)[i+1] == '\0' ||(*buff)[i+1] == ' ' || ispunct((*buff)[i+1]))
+            {
+                if (strcmp(*searc, temp) == 0 && ((*buff)[i+1] == ' ' || (*buff)[i+1] == '\0' || ispunct((*buff)[i+1])))
                 {
                     amm++;
-                    memset(temp, '\0', sl);
                     if (amm == 1)
                     {
                         id = i - num;
                     }
-                    num = 0;
+                    num = -1;
+                    memset(temp, '\0', sl);
                 }
                 else
                 {
-                    num = 0;
+                    num = -1;
                     memset(temp, '\0', sl);
                 }
             }
-        
+            num++;
         }  
     }
-    free(*searc);
     return id;
 }
