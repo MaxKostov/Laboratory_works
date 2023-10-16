@@ -4,9 +4,10 @@
 #include <stdio.h>
 
 void add_text(char **buff);
-int search_word(char **buff);
+int search_word(char **buff, char **searc);
 void edit_text(char **buff);
 int search_id(char **buff, char **searc);
+int ammm(char **string);
 
 int main(void)
 {
@@ -77,8 +78,13 @@ int main(void)
         }
         else if (n == 2)
         {
-            printf("This word appears %i times in the text\n", search_word(&buff));
+            char *searc;
+            searc = malloc(sizeof(char) * 100);
+            printf("Write the word: \n");
+            fgets(searc, 100, stdin);
+            printf("This word appears %i times in the text\n", search_word(&buff, &searc));
             fgetc(stdin);
+            free(searc);
         }
         else if (n == 3)
         {
@@ -116,9 +122,9 @@ int main(void)
 void add_text(char **buff)
 {
     char *temp;
-    temp = malloc(sizeof(char) * 100);
+    temp = malloc(sizeof(char) * 2000);
     printf("Enter your text: \n");
-    fgets(temp, 100, stdin);
+    fgets(temp, 2000, stdin);
     int l = strlen(temp);
     if (l > 0 && temp[l - 1] == '\n') {
         temp[l - 1] = '\0';
@@ -142,22 +148,20 @@ void add_text(char **buff)
     free(temp);
 }
 // search_word function
-int search_word(char **buff)
+int search_word(char **buff, char **searc)
 {
     int amm = 0;
     int num = 0;
-    char *searc;
-    searc = malloc(sizeof(char) * 100);
-    printf("Write the word: \n");
-    fgets(searc, 100, stdin);
+    int sp = ammm(&(*searc));
+    int coun = 0;
     
     char *temp;
-    int sl = strlen(searc);
-    (searc)[sl-1] = '\0';
+    int sl = strlen(*searc);
+    (*searc)[sl-1] = '\0';
     temp = malloc(sizeof(char) * sl);
     memset(temp, '\0', sl);
 
-    if ((searc)[sl-2] == ' ')
+    if ((*searc)[sl-2] == ' ')
     {
         for (int i = 0, n = strlen(*buff); i < n; i++)
         {
@@ -170,18 +174,35 @@ int search_word(char **buff)
             {
                 temp[num] = c;
             }
-            if (c == ' ')
+            if (c == ' ' && coun != sp)
             {
-                if (strcmp(searc, temp) == 0)
+                coun++;
+            }
+            if (c == ' ' && (*buff)[i+1] != ' ')
+            {
+                if (strcmp(*searc, temp) != 0)
+                {
+                    num = -1;
+                    memset(temp, '\0', sl);
+                    coun = 0;
+                    num++;
+                    continue;
+                }
+            }
+            if (c == ' ' && strlen(temp) == strlen(*searc) && coun == sp)
+            {
+                if (strcmp(*searc, temp) == 0)
                 {
                     amm++;
                     num = -1;
                     memset(temp, '\0', sl);
+                    coun = 0;
                 }
                 else
                 {
                     num = -1;
                     memset(temp, '\0', sl);
+                    coun = 0;
                 }
             }
             num++;
@@ -202,7 +223,7 @@ int search_word(char **buff)
             }
             if ((*buff)[i+1] == '\0' ||(*buff)[i+1] == ' ' || ispunct((*buff)[i+1]))
             {
-                if (strcmp(searc, temp) == 0 && ((*buff)[i+1] == ' ' || (*buff)[i+1] == '\0' || ispunct((*buff)[i+1])))
+                if (strcmp(*searc, temp) == 0 && ((*buff)[i+1] == ' ' || (*buff)[i+1] == '\0' || ispunct((*buff)[i+1])))
                 {
                     amm++;
                     num = -1;
@@ -217,7 +238,6 @@ int search_word(char **buff)
             num++;
         }  
     }
-    free(searc);
     return amm;
 }
 
@@ -226,39 +246,53 @@ void edit_text(char **buff)
 {
     char *temp;
     char *second_part;
-    second_part = malloc(200);
-    memset(second_part, '\0', 200);
-    temp = malloc(sizeof(char) * 100);
+    second_part = malloc(1000);
+    memset(second_part, '\0', 1000);
+    temp = malloc(sizeof(char) * 1000);
+    char *the_word;
+    the_word = malloc(sizeof(char) * 1000);
     printf("Write the word you would like to change: \n");
-    fgets(temp, 100, stdin);
-    char *fw;
-    fw = malloc(200);
-    memset(fw, '\0', 200);
-    int id = search_id(&(*buff), &temp);
-    int si = id + strlen(temp);
-    if (id == -1)
-    {
-        printf("There is no such word :(\n");
-    }
-    else
-    {  
-        strncpy(fw, *buff, id); 
-        strcpy(second_part, (*buff)+si);
-        char *the_word;
-        the_word = malloc(sizeof(char) * 100);
-        printf("Write the word you would like to be there: \n");
-        fgets(the_word, 100, stdin);
-        the_word[strlen(the_word)-1] = '\0';
+    fgets(temp, 1000, stdin);
+    printf("Write the word you would like to be there: \n");
+    fgets(the_word, 1000, stdin);
+    the_word[strlen(the_word)-1] = '\0';
+    char *copy;
+    copy = malloc(1000);
+    memset(copy, '\0', 1000);
+    strcpy(copy, temp);
+    char *copy2;
+    copy2 = malloc(1000);
+    memset(copy2, '\0', 1000);
+    strcpy(copy2, temp);
+    temp[strlen(temp)-1] = '\0';
+    int q = search_word(&(*buff), &copy);
 
-        char *slice;
-        slice = malloc(strlen(*buff) + strlen(the_word));
-        memset(slice, '\0', (strlen(*buff) + strlen(the_word)));
-        strcat(fw, the_word);
-        strcat(fw, second_part);
-        strcpy((*buff), fw);
-        free(the_word);
-        free(slice);
+    for (int i = 0; i < q; i++)
+    {
+        char *fw;
+        fw = malloc(1000);
+        memset(fw, '\0', 1000);
+        int id = search_id(&(*buff), &copy2);
+        int si = id + strlen(temp);
+        if (id == -1)
+        {
+            printf("There is no such word :(\n");
+        }
+        else
+        {  
+            strncpy(fw, *buff, id); 
+            strcpy(second_part, (*buff)+si);
+
+            char *slice;
+            slice = malloc(strlen(*buff) + strlen(the_word));
+            memset(slice, '\0', (strlen(*buff) + strlen(the_word)));
+            strcat(fw, the_word);
+            strcat(fw, second_part);
+            strcpy((*buff), fw);
+            copy2[strlen(copy2)] = '\n';
+        }
     }
+    free(the_word);
 } 
 
 int search_id(char **buff, char **searc)
@@ -342,4 +376,18 @@ int search_id(char **buff, char **searc)
         }  
     }
     return id;
+}
+
+int ammm(char **string)
+{
+    char sp = ' ';
+    int amm = 0;
+    for (int i = 0; i < strlen(*string); i++)
+    {
+        if ((*string)[i] == sp)
+        {
+            amm++;
+        }
+    }
+    return amm;
 }
