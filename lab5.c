@@ -85,7 +85,9 @@ int main(void)
     int *arr = malloc(sizeof(int) * n1);
     for (int i; i < n1; i++)
     {
-        *(arr+i) = ((rand() % 10)-5);
+        int z;
+        scanf("%d", &z);
+        *(arr+i) = z;
     }
     for (int i; i < n1; i++)
     {
