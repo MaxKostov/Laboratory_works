@@ -106,7 +106,7 @@ int main(void)
     printf("Medium task 1: \n");
     medium1(arr, n1);
 
-
+    free(arr);
     return 0;
 }
 
