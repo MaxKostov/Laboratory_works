@@ -106,7 +106,7 @@ int main(void)
     printf("Medium task 1: \n");
     medium1(arr, n1);
 
-    free(arr);
+
     return 0;
 }
 
@@ -179,18 +179,20 @@ void easy2(int *arr, int n)
 
 void medium1(int *arr, int n)
 {
-    int m = -1;
+    int m;
+    int p = -1;
     printf("Enter the number you want to find: ");
     scanf("%i", &m);
     for (int i = 0; i < n; i++)
     {
         if (*(arr+i) == m)
         {
+            p = i;
             printf("Index: %i \n", i);
             break;
         }
     }
-    if (m == -1)
+    if (p == -1)
     {
         printf("There is no such number :(\n");
     }
