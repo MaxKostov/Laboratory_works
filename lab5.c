@@ -18,8 +18,6 @@ int main(void)
     {
         *(matrix + i) = malloc(m*sizeof(int));
     }
-    int length = n*m;
-    int array[length];
 
     int operation;
     printf("Type 1 for random generated 2D array\n");
@@ -83,13 +81,14 @@ int main(void)
     int n1;
     scanf("%d", &n1);
     int *arr = malloc(sizeof(int) * n1);
-    for (int i; i < n1; i++)
+    for (int i = 0; i < n1; i++)
     {
         int z;
         scanf("%d", &z);
+
         *(arr+i) = z;
     }
-    for (int i; i < n1; i++)
+    for (int i = 0; i < n1; i++)
     {
         printf("%d ", *(arr+i));
     }
@@ -106,7 +105,7 @@ int main(void)
     printf("Medium task 1: \n");
     medium1(arr, n1);
 
-
+    free(arr);
     return 0;
 }
 
