@@ -11,8 +11,6 @@ void medium1(int *arr, int n);
 int main(void)
 {
     int n, m;
-    printf("n, m: ");
-    scanf("%d %d", &n, &m);
     int **matrix = NULL;
     int g = 1;
     while (g == 1)
@@ -35,6 +33,8 @@ int main(void)
         switch (operation)
         {
         case 1:
+            printf("n, m: ");
+            scanf("%d %d", &n, &m);
             matrix = malloc((n * sizeof(int*)));
             for (int i = 0; i < n; i++)
             {
