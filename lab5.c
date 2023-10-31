@@ -13,59 +13,83 @@ int main(void)
     int n, m;
     printf("n, m: ");
     scanf("%d %d", &n, &m);
-    int** matrix = malloc((n * sizeof(int*)));
-    for (int i = 0; i < n; i++)
+    int **matrix = NULL;
+    int g = 1;
+    while (g == 1)
     {
-        *(matrix + i) = malloc(m*sizeof(int));
-    }
-
-    int operation;
-    printf("Type 1 for random generated 2D array\n");
-    printf("Type 2 for input 2D array from keybord\n");
-    scanf("%d", &operation);
-    printf("\n");
-
-    switch (operation)
-    {
-    case 1:
-        for (int i = 0; i < n; i++)
+        int operation;
+        printf("1. Dynamic memory allocation for arrays two-dimensional\n");
+        printf("2. Entering the elements of the keyboard array\n");
+        printf("3. Filling the array with random values\n");
+        printf("4. Sorting the elements of the array (according to variants)\n");
+        printf("5. Display the board elements to the screen\n");
+        printf("6. Release the memory allocated for the array\n");
+        printf("0. Exit from the program\n");
+        do 
         {
-            for (int j = 0; j < m; j++)
-            {
-                int x = (rand() % 10);
-                *(*(matrix + i) + j) = x;
-            }
+            scanf("%d", &operation);
         }
-        break;
-    case 2:
-        for (int i = 0; i < n; i++)
-        {
-            for (int j = 0; j < m; j++)
-            {
-                int x;
-                scanf("%d", &x);
-                *(*(matrix + i) + j) = x;
-            }
-        }
-    }
-
-    selsort2(matrix, m, n);
-    selsort2(matrix, 1, n);
-
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < m; j++)
-        {
-            printf("%i ", matrix[i][j]);
-        }
+        while(operation < 0 || operation > 6);
         printf("\n");
+
+        switch (operation)
+        {
+        case 1:
+            matrix = malloc((n * sizeof(int*)));
+            for (int i = 0; i < n; i++)
+            {
+                *(matrix + i) = malloc(m*sizeof(int));
+            }
+            break;
+
+        case 3:
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < m; j++)
+                {
+                    int x = (rand() % 10);
+                    *(*(matrix + i) + j) = x;
+                }
+            }
+            break;
+        case 2:
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < m; j++)
+                {
+                    int x;
+                    scanf("%d", &x);
+                    *(*(matrix + i) + j) = x;
+                }
+            }
+            break;
+        case 4:
+            selsort2(matrix, m, n);
+            selsort2(matrix, 1, n);
+            break;
+        case 5:
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < m; j++)
+                {
+                    printf("%i ", matrix[i][j]);
+                }
+                printf("\n");
+            }
+            break;
+        case 6:
+            for (int i = 0; i < n; i++)
+            {
+                free(*(matrix + i));
+            }
+            free(matrix);
+            matrix = NULL;
+            break;
+        case 0:
+            g = 0;
+            break;
+        }
     }
-    
-    for (int i = 0; i < n; i++)
-    {
-        free(*(matrix + i));
-    }
-    free(matrix);
     printf("\n");
     printf("Piece of cake 1: \n");
     piece_of_cake();
