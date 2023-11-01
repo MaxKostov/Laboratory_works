@@ -170,52 +170,56 @@ void piece_of_cake2(int *a, int *b)
 
 void easy1(int *arr, int n)
 {
-    int smallest = *(arr + 0);
-    int largest = *(arr + (n-1));
+    int *smallest = (arr + 0);
+    int *largest = (arr + (n-1));
     for (int i = 0; i < n; i++)
     {
-        if (*(arr + i) < smallest)
+        if (*(arr + i) < *smallest)
         {
-            smallest = *(arr + i);
+            smallest = (arr + i);
         }
-        else if (*(arr + i) > largest)
+        else if (*(arr + i) > *largest)
         {
-            largest = *(arr + i);
+            largest = (arr + i);
         }
     }
-    printf("smallest = %i \n", smallest);
-    printf("largeest = %i \n", largest);
+    printf("smallest = %i \n", *smallest);
+    printf("largeest = %i \n", *largest);
 }
 
 void easy2(int *arr, int n)
 {
-    int sum = 0;
+    int sum;
+    int *ps = &sum;
     for (int i = 0; i < n; i++)
     {
         if (*(arr + i) < 0)
         {
-            sum += *(arr+i);
+            *ps += *(arr+i);
         }
     }
-    printf("sum of all negative numbers = %i \n", sum);
+    printf("sum of all negative numbers = %i \n", *ps);
 }
 
 void medium1(int *arr, int n)
 {
     int m;
-    int p = -1;
+    int *pm = &m;
+    int p;
+    int *pp = &p;
+    *pp = -1;
     printf("Enter the number you want to find: ");
-    scanf("%i", &m);
+    scanf("%i", pm);
     for (int i = 0; i < n; i++)
     {
-        if (*(arr+i) == m)
+        if (*(arr+i) == *pm)
         {
-            p = i;
-            printf("Index: %i \n", i);
+            *pp = i;
+            printf("Index: %i \n", *pp);
             break;
         }
     }
-    if (p == -1)
+    if (*pp == -1)
     {
         printf("There is no such number :(\n");
     }
